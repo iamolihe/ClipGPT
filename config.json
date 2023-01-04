@@ -1,0 +1,12 @@
+{
+    "hot_keys": [
+        {
+            "hot_key": "<cmd>+<ctrl>+t",
+            "phrase": "write following text in a professional style: "
+        },
+        {
+            "hot_key": "<cmd>+<ctrl>+g",
+            "phrase": "write following text in a professional style in german: "
+        }
+    ]
+}
