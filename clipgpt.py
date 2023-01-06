@@ -37,30 +37,28 @@ def notify(title, body):
 
 class ClipGPT:
     def __init__(self, config_file):
-        self.init_chatGPT()
-        self.init_hotkey_listener(config_file)
+        self._init_chatGPT()
+        self._init_hotkey_listener(config_file)
 
-    def on_activate(self, phrase):
-        notify(NOTIFICATION_SEND_TITLE, NOTIFICATION_SEND_BODY)
-        content = pyperclip.paste()
-        reply = self.chat(phrase, content)
-        pyperclip.copy(reply.replace('"', ''))
-        notify(NOTIFICATION_RECEIVED_TITLE, NOTIFICATION_RECEIVED_BODY)
-
-    def exit_program(self):
-        self.stop()
-
-    def init_chatGPT(self):
+    def _init_chatGPT(self):
         self.input_q = queue.Queue()
         self.output_q = queue.Queue()
         self.stop_event = threading.Event()
         self.chatgpt = threading.Thread(target=chatgpt_thread, args=(self.input_q, self.output_q, self.stop_event))
 
-    def init_hotkey_listener(self, config_file):
+    def _init_hotkey_listener(self, config_file):
+        def exit_program(self):
+            self.stop()
+        def on_activate(phrase):
+            notify(NOTIFICATION_SEND_TITLE, NOTIFICATION_SEND_BODY)
+            content = pyperclip.paste()
+            reply = self.chat(phrase, content)
+            pyperclip.copy(reply.replace('"', ''))
+            notify(NOTIFICATION_RECEIVED_TITLE, NOTIFICATION_RECEIVED_BODY)
         def fun_definer(p):
-            return lambda: self.on_activate(p)
+            return lambda: on_activate(p)
         # provide a shortcut to quit the application
-        hot_key_config = {"<ctrl>+<alt>+<cmd>+e": self.exit_program}
+        hot_key_config = {"<ctrl>+<alt>+<cmd>+e": exit_program}
         # add other shortcut of the config file
         with open(config_file) as f:
             config = json.load(f)
