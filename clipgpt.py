@@ -10,6 +10,8 @@ NOTIFICATION_SEND_TITLE = '"Text send..."'
 NOTIFICATION_SEND_BODY = '"Waiting for answer..."'
 NOTIFICATION_RECEIVED_TITLE = '"Text is Ready"'
 NOTIFICATION_RECEIVED_BODY = '"Your command was processed."'
+NOTIFICATION_EXIT_TITLE = '"Exiting ClipGPT..."'
+NOTIFICATION_EXIT_BODY = '"Program is closing down"'
 
 def chatgpt_thread(input_queue, output_queue, stop_event):
     gpt = ChatGPT()
@@ -76,6 +78,7 @@ class ClipGPT:
             self.stop()
     
     def stop(self):
+        notify(NOTIFICATION_EXIT_TITLE, NOTIFICATION_EXIT_BODY)
         self.key_listener.stop()
         self.stop_event.set()
         self.chatgpt.join()
