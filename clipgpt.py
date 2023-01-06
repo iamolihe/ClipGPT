@@ -17,16 +17,20 @@ def chatgpt_thread(input_queue, output_queue, stop_event):
     gpt = ChatGPT()
     prompt = None
     last_prompt = None
+    reply = None
     while True:
         try:
             prompt = input_queue.get(timeout=1)
         except queue.Empty:
             if stop_event.is_set():
                 return
+            continue # don't run the last part, if queue was empty
+        # if prompt didn't changed, return the same reply again (simple cashing)
+        # useful if you press the hotkey by accident
         if prompt and prompt != last_prompt:
             last_prompt = prompt
             reply = gpt.ask(prompt)
-            output_queue.put(reply)
+        output_queue.put(reply)
 
 def notify(title, body):
     os.system(f"terminal-notifier -title {title} -message {body}")
